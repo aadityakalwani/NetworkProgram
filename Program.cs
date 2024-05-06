@@ -20,7 +20,7 @@ class Program
         switch (userMenuChoice)
         {
             case 1:
-                Algorithms.ApplyDijkstra(adjacencyMatrix);
+                Algorithms.ApplyDijkstra(adjacencyMatrix, numberOfNodes);
                 break;
             case 2:
                 Algorithms.ApplyPrims(adjacencyMatrix);
@@ -59,7 +59,7 @@ class Program
 // SP and MST related methods
 class Algorithms
 {
-    public static void ApplyDijkstra(int[,] adjacencyMatrix)
+    public static void ApplyDijkstra(int[,] adjacencyMatrix, int numberOfNodes)
     {
         Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
         
@@ -68,8 +68,23 @@ class Algorithms
         
         Thread.Sleep(69);
         
-        int numberOfNodes = adjacencyMatrix.GetLength(0);
-        
+        /*
+         * algorithm steps:
+         * 
+         * create an empty list of permanent vertices
+         * create a list of non-permanent vertices
+         * starting at vertex 0 (A) --> tk must convert between letters 0123 and ABCD for vertices
+         * 
+         * current vertex = starting vertex
+         * while the list of non-permanent vertices is not empty / permanent vertices list is empty:
+         *     for every vertex in the network
+         *         if it is connected to the current vertex
+         *            set the temporary distance label of the vertex to the distance between it and the current vertex
+         *     then find the vertex with the smallest temporary distance label
+         *     make it permanent and store it in the permanent vertices list, remove it from the non-permanent list
+         *     set the current vertex to the newly added permanent vertex
+         *     [repeat]
+         */
         List<Vertex> PermanentVerticesList = new List<Vertex>();
         
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
