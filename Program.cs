@@ -70,13 +70,8 @@ class Algorithms
         
         int numberOfNodes = adjacencyMatrix.GetLength(0);
         
-        /*
-         * ask what vertex to start at
-         * dijkstra the way across the matrix
-         * boomshakalaka done
-        */
-        
         List<Vertex> PermanentVerticesList = new List<Vertex>();
+        
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
         for (int i = 0; i < numberOfNodes; i++)
         {
@@ -95,6 +90,7 @@ class Algorithms
         NonPermanentVerticesList[startVertex].PermanentDistanceLabel = 0;
         NonPermanentVerticesList[startVertex].TemporaryDistanceLabel = 0;
         NonPermanentVerticesList[startVertex].PermanentlyAdded = true;
+
         
         for (int i = 0; i <= NonPermanentVerticesList.Count - 1; i++)
             // for some reason the condition cannot be NonPermanentVerticesList.Count + 1
@@ -113,12 +109,12 @@ class Algorithms
                 Console.WriteLine($"Vertex {i} is not connected to vertex {startVertex}");
             }
         }
-        
+    
         // find the vertex with the smallest temporary distance label, and make it permanent
-        
+    
         int smallestValue = int.MaxValue;
         int smallestVertex = 0;
-        
+    
         foreach (Vertex vertex in NonPermanentVerticesList)
         {
             if (vertex.PermanentlyAdded == false && vertex.TemporaryDistanceLabel < smallestValue)
@@ -127,9 +123,11 @@ class Algorithms
                 smallestVertex = vertex.VertexNumber;
             }
         }
-        
+    
         NonPermanentVerticesList[smallestVertex].PermanentDistanceLabel = NonPermanentVerticesList[smallestVertex].TemporaryDistanceLabel;
         NonPermanentVerticesList[smallestVertex].PermanentlyAdded = true;
+        PermanentVerticesList.Add(NonPermanentVerticesList[smallestVertex]);
+        NonPermanentVerticesList.RemoveAt(smallestVertex);
         
         
         stopwatch.Stop();
