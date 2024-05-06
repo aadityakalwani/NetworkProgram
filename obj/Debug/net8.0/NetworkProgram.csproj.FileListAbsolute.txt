@@ -1,0 +1,14 @@
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/bin/Debug/net8.0/NetworkProgram
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/bin/Debug/net8.0/NetworkProgram.deps.json
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/bin/Debug/net8.0/NetworkProgram.runtimeconfig.json
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/bin/Debug/net8.0/NetworkProgram.dll
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/bin/Debug/net8.0/NetworkProgram.pdb
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.GeneratedMSBuildEditorConfig.editorconfig
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.AssemblyInfoInputs.cache
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.AssemblyInfo.cs
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.csproj.CoreCompileInputs.cache
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.dll
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/refint/NetworkProgram.dll
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.pdb
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/NetworkProgram.genruntimeconfig.cache
+/Users/aadityakalwani/Documents/Coding/C#/NetworkProgram/obj/Debug/net8.0/ref/NetworkProgram.dll
