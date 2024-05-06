@@ -44,6 +44,22 @@ class Dijkstra
     }
 }
 
+class Prims
+{
+    public static void ApplyPrims(int[,] adjacencyMatrix)
+    {
+        Console.WriteLine("We are applying Prim's from a matrix; let us cook");
+    }
+}
+
+class Kruskal
+{
+    public static void ApplyKruskal(int[,] adjacencyMatrix)
+    {
+        Console.WriteLine("We are applying Kruskal's from a matrix; let us cook");
+    }
+}
+
 // Matrix-related methods
 class Matrix
 {
