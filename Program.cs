@@ -5,11 +5,29 @@ class Program
 
     public static void Main()
     {
-        int[,] adjacencyMatrix = new int[3, 3];
-        // 3x3 matrix for now, can be changed later
-        // take an input for dimensions of the matrix / number of nodes etc. and then set up a 2d array as required later
+        Console.WriteLine("How many nodes exist in the graph?\nPlease use a small number:");
+        int numberOfNodes = GetValidInt(1, 9999999);
+        int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
-        Console.WriteLine("Here is the current adjacency matrix:");
+        Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
+        
+        Random random = new Random();
+        for (int i = 0; i < numberOfNodes; i++)
+        {
+            for (int j = 0; j < numberOfNodes; j++)
+            {
+                if (i == j)
+                {
+                    adjacencyMatrix[i, j] = 0;
+                }
+                else
+                {
+                    adjacencyMatrix[i, j] = random.Next(1, 10);
+                }
+            }
+        }
+        
+        Console.WriteLine("After assigning these distances, here is the current adjacency matrix:");
         DisplayMatrix(adjacencyMatrix);
         
         Console.WriteLine("Enter your choice:\n1 - apply Dijkstra\n2 - apply Prim's\n3 - apply Kruskal's\n");
@@ -34,7 +52,8 @@ class Program
 
     public static void ApplyDijkstra(int[,] adjacencyMatrix)
     {
-        Console.WriteLine("We are applying Dijkstra; let us cook");
+        Console.WriteLine("We are applying Dijkstra's from a matrix; let us cook");
+        
     }
 
     public static void ApplyPrims(int[,] adjacencyMatrix)
