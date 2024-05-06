@@ -6,8 +6,8 @@ class Program
 {
     public static void Main()
     {
-        Console.WriteLine("How many nodes exist in the graph?\nPlease use a number below 10:");
-        int numberOfNodes = GetValidInt(1, 10);
+        Console.WriteLine("How many nodes exist in the graph?\nPlease use a number 2 - 26 otherwise idk what to call the vertices:");
+        int numberOfNodes = GetValidInt(2, 26);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
@@ -62,18 +62,127 @@ class Algorithms
     public static void ApplyDijkstra(int[,] adjacencyMatrix)
     {
         Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
-    }
-    
-    public static void ApplyKruskal(int[,] adjacencyMatrix)
-    {
-        Console.WriteLine("\nWe are applying Kruskal's from a matrix; let us cook");
+        
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        
+        Thread.Sleep(69);
+        
+        int numberOfNodes = adjacencyMatrix.GetLength(0);
+        
+        /*
+         * ask what vertex to start at
+         * dijkstra the way across the matrix
+         * boomshakalaka done
+        */
+        
+        List<Vertex> PermanentVerticesList = new List<Vertex>();
+        List<Vertex> NonPermanentVerticesList = new List<Vertex>();
+        for (int i = 0; i < numberOfNodes; i++)
+        {
+            NonPermanentVerticesList.Add(new Vertex(i, i,int.MaxValue, int.MaxValue));
+        }
+        
+        /* to start at any vertex
+         * Console.WriteLine("Which vertex do you want to start at? 0 to {numberOfNodes - 1}:\n");
+           int startVertex = Program.GetValidInt(0, numberOfNodes - 1);
+         */
+        
+        Console.WriteLine("Starting at vertex 0\nThis is vertex A in the adjacency matrix");
+        int startVertex = 0;
+        
+        NonPermanentVerticesList[startVertex].StopNumber = 0;
+        NonPermanentVerticesList[startVertex].PermanentDistanceLabel = 0;
+        NonPermanentVerticesList[startVertex].TemporaryDistanceLabel = 0;
+        NonPermanentVerticesList[startVertex].PermanentlyAdded = true;
+        
+        for (int i = 0; i <= NonPermanentVerticesList.Count - 1; i++)
+            // for some reason the condition cannot be NonPermanentVerticesList.Count + 1
+        {
+            if (i == startVertex)
+            {
+                Console.WriteLine($"Vertex {i} is the start vertex");
+            }
+            else if (adjacencyMatrix[startVertex, i] != 0)
+            {
+                NonPermanentVerticesList[i].TemporaryDistanceLabel = adjacencyMatrix[startVertex, i];
+                Console.WriteLine($"Vertex {i} is connected to vertex {startVertex} with a distance of {adjacencyMatrix[startVertex, i]}");
+            }
+            else
+            {
+                Console.WriteLine($"Vertex {i} is not connected to vertex {startVertex}");
+            }
+        }
+        
+        // find the vertex with the smallest temporary distance label, and make it permanent
+        
+        int smallestValue = int.MaxValue;
+        int smallestVertex = 0;
+        
+        foreach (Vertex vertex in NonPermanentVerticesList)
+        {
+            if (vertex.PermanentlyAdded == false && vertex.TemporaryDistanceLabel < smallestValue)
+            {
+                smallestValue = vertex.TemporaryDistanceLabel;
+                smallestVertex = vertex.VertexNumber;
+            }
+        }
+        
+        NonPermanentVerticesList[smallestVertex].PermanentDistanceLabel = NonPermanentVerticesList[smallestVertex].TemporaryDistanceLabel;
+        NonPermanentVerticesList[smallestVertex].PermanentlyAdded = true;
+        
+        
+        stopwatch.Stop();
+        Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
+        
     }
     
     public static void ApplyPrims(int[,] adjacencyMatrix)
     {
+        Console.Clear();
         Console.WriteLine("\nWe are applying Prim's from a matrix; let us cook");
+        
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        
+        int numberOfNodes = adjacencyMatrix.GetLength(0);
+        
+        stopwatch.Stop();
+        Console.WriteLine($"Applying Prim's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
     }
     
+    public static void ApplyKruskal(int[,] adjacencyMatrix)
+    {
+        Console.Clear();
+        Console.WriteLine("\nWe are applying Kruskal's from a matrix; let us cook");
+        
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        
+        int numberOfNodes = adjacencyMatrix.GetLength(0);
+        
+        stopwatch.Stop();
+        Console.WriteLine($"Applying Kruskal's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
+    }
+}
+
+// Vertex-related methods
+class Vertex
+{
+    public int VertexNumber;
+    public int StopNumber;
+    public int PermanentDistanceLabel;
+    public int TemporaryDistanceLabel;
+    public bool PermanentlyAdded;
+    
+    public Vertex(int stopNumber, int vertexNumber, int permanentDistanceLabel, int temporaryDistanceLabel)
+    {
+        VertexNumber = vertexNumber;
+        StopNumber = stopNumber;
+        PermanentDistanceLabel = permanentDistanceLabel;
+        TemporaryDistanceLabel = temporaryDistanceLabel;
+        PermanentlyAdded = false;
+    }
 }
 
 // Matrix-related methods
@@ -93,7 +202,7 @@ class Matrix
                 }
                 else if (i < j) // above the diagonal
                 {
-                    adjacencyMatrix[i, j] = random.Next(1, 10);
+                    adjacencyMatrix[i, j] = random.Next(0, 5);
                 }
                 else // below the diagonal is the mirror of the above
                 {
