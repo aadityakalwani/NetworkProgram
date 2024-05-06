@@ -9,6 +9,8 @@ class Program
         // 3x3 matrix for now, can be changed later
         // take an input for dimensions of the matrix / number of nodes etc. and then set up a 2d array as required later
         
+        Console.WriteLine("Here is the current adjacency matrix:");
+        DisplayMatrix(adjacencyMatrix);
         
         Console.WriteLine("Enter your choice:\n1 - apply Dijkstra\n2 - apply Prim's\n3 - apply Kruskal's\n");
         int userMenuOption = GetValidInt(1, 9999999);
@@ -16,33 +18,45 @@ class Program
         switch (userMenuOption) 
         {
             case 1:
-                applyDijkstra(adjacencyMatrix);
+                ApplyDijkstra(adjacencyMatrix);
             
                 break;
             case 2:
-                applyPrims(adjacencyMatrix);
+                ApplyPrims(adjacencyMatrix);
             
                 break;
             case 3:
-                applyKruskal(adjacencyMatrix);
+                ApplyKruskal(adjacencyMatrix);
             
                 break;
         }
     }
 
-    public static void applyDijkstra(int[,] adjacencyMatrix)
+    public static void ApplyDijkstra(int[,] adjacencyMatrix)
     {
         Console.WriteLine("We are applying Dijkstra; let us cook");
     }
 
-    public static void applyPrims(int[,] adjacencyMatrix)
+    public static void ApplyPrims(int[,] adjacencyMatrix)
     {
         Console.WriteLine("doing Prim's");
     }
 
-    public static void applyKruskal(int[,] adjacencyMatrix)
+    public static void ApplyKruskal(int[,] adjacencyMatrix)
     {
         Console.WriteLine("doing Kruskal's");
+        }
+    
+    public static void DisplayMatrix(int[,] matrix)
+    {
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                Console.Write(matrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
     }
 
     public static int GetValidInt(int min, int max)
