@@ -1,4 +1,6 @@
-﻿namespace NetworkProgram;
+﻿using System.Diagnostics;
+
+namespace NetworkProgram;
 
 class Program
 {
@@ -8,17 +10,36 @@ class Program
         int numberOfNodes = GetValidInt(1, 10);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
-        Matrix.DisplayMatrix(adjacencyMatrix);
-        
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
         Matrix.AssignRandomDistances(adjacencyMatrix, numberOfNodes);
         
-        Console.WriteLine("After assigning these distances, here is the current adjacency matrix:");
+        Console.WriteLine("After assigning these distances, here is the current adjacency matrix:\n");
         Matrix.DisplayMatrix(adjacencyMatrix);
         
-        Dijkstra.ApplyDijkstra(adjacencyMatrix);
+        int userMenuChoice = Menu();
+        switch (userMenuChoice)
+        {
+            case 1:
+                Algorithms.ApplyDijkstra(adjacencyMatrix);
+                break;
+            case 2:
+                Algorithms.ApplyPrims(adjacencyMatrix);
+                break;
+            case 3:
+                Algorithms.ApplyKruskal(adjacencyMatrix);
+                break;
+        }
+        
     }
 
+    public static int Menu()
+    {
+        
+        Console.WriteLine("\nChoose an algorithm to apply:\n1 - Dijkstra's\n2 - Prim's\n3 - Kruskal's\nEnter a number:");
+        
+        return GetValidInt(1, 3);
+    }
+    
     public static int GetValidInt(int min, int max)
     {
         if (int.TryParse(Console.ReadLine(), out int validInt))
@@ -35,29 +56,24 @@ class Program
     }
 }
 
-// Dijkstra-related methods
-class Dijkstra
+// SP and MST related methods
+class Algorithms
 {
     public static void ApplyDijkstra(int[,] adjacencyMatrix)
     {
-        Console.WriteLine("We are applying Dijkstra's from a matrix; let us cook");
+        Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
     }
-}
-
-class Prims
-{
-    public static void ApplyPrims(int[,] adjacencyMatrix)
-    {
-        Console.WriteLine("We are applying Prim's from a matrix; let us cook");
-    }
-}
-
-class Kruskal
-{
+    
     public static void ApplyKruskal(int[,] adjacencyMatrix)
     {
-        Console.WriteLine("We are applying Kruskal's from a matrix; let us cook");
+        Console.WriteLine("\nWe are applying Kruskal's from a matrix; let us cook");
     }
+    
+    public static void ApplyPrims(int[,] adjacencyMatrix)
+    {
+        Console.WriteLine("\nWe are applying Prim's from a matrix; let us cook");
+    }
+    
 }
 
 // Matrix-related methods
