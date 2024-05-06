@@ -2,11 +2,10 @@
 
 class Program
 {
-
     public static void Main()
     {
         Console.WriteLine("How many nodes exist in the graph?\nPlease use a small number:");
-        int numberOfNodes = GetValidInt(1, 9999999);
+        int numberOfNodes = GetValidInt(1, 10);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
@@ -28,54 +27,9 @@ class Program
         }
         
         Console.WriteLine("After assigning these distances, here is the current adjacency matrix:");
-        DisplayMatrix(adjacencyMatrix);
+        AdjacencyMatrix.DisplayMatrix(adjacencyMatrix);
         
-        Console.WriteLine("Enter your choice:\n1 - apply Dijkstra\n2 - apply Prim's\n3 - apply Kruskal's\n");
-        int userMenuOption = GetValidInt(1, 9999999);
-
-        switch (userMenuOption) 
-        {
-            case 1:
-                ApplyDijkstra(adjacencyMatrix);
-            
-                break;
-            case 2:
-                ApplyPrims(adjacencyMatrix);
-            
-                break;
-            case 3:
-                ApplyKruskal(adjacencyMatrix);
-            
-                break;
-        }
-    }
-
-    public static void ApplyDijkstra(int[,] adjacencyMatrix)
-    {
-        Console.WriteLine("We are applying Dijkstra's from a matrix; let us cook");
-        
-    }
-
-    public static void ApplyPrims(int[,] adjacencyMatrix)
-    {
-        Console.WriteLine("doing Prim's");
-    }
-
-    public static void ApplyKruskal(int[,] adjacencyMatrix)
-    {
-        Console.WriteLine("doing Kruskal's");
-        }
-    
-    public static void DisplayMatrix(int[,] matrix)
-    {
-        for (int i = 0; i < matrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < matrix.GetLength(1); j++)
-            {
-                Console.Write(matrix[i, j] + " ");
-            }
-            Console.WriteLine();
-        }
+        Dijkstra.ApplyDijkstra(adjacencyMatrix);
     }
 
     public static int GetValidInt(int min, int max)
@@ -91,5 +45,36 @@ class Program
         }
         Console.WriteLine("Please enter a valid integer");
         return GetValidInt(min, max);
+    }
+}
+
+class Dijkstra
+{
+    public static void ApplyDijkstra(int[,] adjacencyMatrix)
+    {
+        Console.WriteLine("We are applying Dijkstra's from a matrix; let us cook");
+    }
+}
+
+class AdjacencyMatrix
+{
+    
+    // constructor to create the adjacency matrix
+
+    public AdjacencyMatrix(int numberOfNodes)
+    {
+        int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
+    }
+    
+    public static void DisplayMatrix(int[,] matrix)
+    {
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                Console.Write(matrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
     }
 }
