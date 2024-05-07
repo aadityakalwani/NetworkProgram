@@ -6,8 +6,8 @@ class Program
 {
     public static void Main()
     {
-        Console.WriteLine("How many nodes exist in the graph?\nPlease use a number 2 - 26 otherwise idk what to call the vertices:");
-        int numberOfNodes = GetValidInt(2, 26);
+        Console.WriteLine("How many nodes exist in the graph?\nPlease use a number 2 - 60 otherwise idk what to call the vertices:");
+        int numberOfNodes = GetValidInt(2, 60);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
@@ -88,7 +88,19 @@ class Algorithms
         Thread.Sleep(69);
 
         // alphabet array to convert between vertex numbers and letters
-        char[] alphabetArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        char[] alphabetArray =
+            [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z',
+            'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ',
+            'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ',
+            'φ', 'χ', 'ψ', 'ω',
+            'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ',
+            'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ',
+            'ⓤ', 'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ',
+            '㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'
+            ];
         
         List<Vertex> PermanentVerticesList = new List<Vertex>();
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
@@ -141,10 +153,6 @@ class Algorithms
             }
         }
         
-        stopwatch.Stop();
-        Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
-        
-        
         for (int i = 1; i < numberOfNodes; i++)
         {
             List<int> path = new List<int>();
@@ -155,14 +163,26 @@ class Algorithms
                 currentVertexIndex = NonPermanentVerticesList[currentVertexIndex].Predecessor;
             }
             path.Add(0); // Add start vertex
-            path.Reverse(); // Reverse to get the path from start to current vertex
+
+            // Print the shortest path
             Console.Write($"Shortest path from A to {alphabetArray[i]}:");
-            foreach (int vertexIndex in path)
+
+            int totalLength = 0;
+            for (int j = path.Count - 1; j >= 0; j--)
             {
-                Console.Write($" -> {alphabetArray[vertexIndex]}");
+                Console.Write($" -> {alphabetArray[path[j]]} ({NonPermanentVerticesList[path[j]].TemporaryDistanceLabel})");
+                totalLength += NonPermanentVerticesList[path[j]].TemporaryDistanceLabel;
+
             }
+            Console.Write($"    | Total length of {totalLength}");
+
             Console.WriteLine();
         }
+
+        
+        stopwatch.Stop();
+        Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
+        
     }
     
     public static void ApplyPrims(int[,] adjacencyMatrix)
@@ -244,17 +264,29 @@ class Matrix
     
     public static void DisplayMatrix(int[,] matrix)
     {
-        string vertices = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        char[] alphabetArray =
+        [
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+            'U', 'V', 'W', 'X', 'Y', 'Z',
+            'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ',
+            'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ',
+            'φ', 'χ', 'ψ', 'ω',
+            'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ',
+            'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ',
+            'ⓤ', 'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ',
+            '㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'
+        ];
         Console.Write("  ");
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            Console.Write(" " + vertices[i] + "");
+            Console.Write(" " + alphabetArray[i] + "");
         }
         Console.WriteLine();
 
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            Console.Write(vertices[i] + "| ");
+            Console.Write(alphabetArray[i] + "| ");
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
                 Console.Write(matrix[i, j] + " ");
