@@ -91,7 +91,7 @@ class Algorithms
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
         for (int i = 0; i < numberOfNodes; i++)
         {
-            NonPermanentVerticesList.Add(new Vertex(i, i,int.MaxValue, int.MaxValue));
+            NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
         }
         
         // alphabet array to convert between vertex numbers and letters
@@ -113,7 +113,6 @@ class Algorithms
             // for every vertex in the graph, check if it is connected to the start vertex.
             // If it is, set the temporary distance label to the distance between the two vertices
             for (int i = 1; i <= NonPermanentVerticesList.Count - 1; i++)
-                // for some reason the condition cannot be NonPermanentVerticesList.Count + 1
             {
                 if (i == currentVertex)
                 {
@@ -122,7 +121,11 @@ class Algorithms
                 else if (adjacencyMatrix[currentVertex, i] != 0)
                 {
                     // include a route going through another place and sum the distances
-                    NonPermanentVerticesList[i].TemporaryDistanceLabel = adjacencyMatrix[currentVertex, i];
+                    int newDistance = NonPermanentVerticesList[currentVertex].PermanentDistanceLabel + adjacencyMatrix[currentVertex, i];
+                    if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
+                    {
+                        NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
+                    }
                     Console.WriteLine($"Vertex {alphabetArray[i]} is connected to vertex {alphabetArray[currentVertex]} with a distance of {adjacencyMatrix[currentVertex, i]}");
                 }
                 else
@@ -132,7 +135,7 @@ class Algorithms
             }
     
             // find the vertex with the smallest temporary distance label
-            int smallestValue = int.MaxValue;
+            int smallestValue = 10;
             int smallestVertex = 0;
     
             foreach (Vertex vertex in NonPermanentVerticesList)
@@ -202,11 +205,11 @@ class Vertex
     public int TemporaryDistanceLabel;
     public bool PermanentlyAdded;
     
-    public Vertex(int stopNumber, int vertexNumber, int permanentDistanceLabel, int temporaryDistanceLabel)
+    public Vertex(int stopNumber, int vertexNumber,  int temporaryDistanceLabel)
     {
         VertexNumber = vertexNumber;
         StopNumber = stopNumber;
-        PermanentDistanceLabel = permanentDistanceLabel;
+        PermanentDistanceLabel = 999;
         TemporaryDistanceLabel = temporaryDistanceLabel;
         PermanentlyAdded = false;
     }
