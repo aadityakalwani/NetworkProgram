@@ -71,12 +71,13 @@ class Algorithms
         /*
          * algorithm steps:
          * 
-         * create an empty list of permanent vertices
-         * create a list of non-permanent vertices
-         * starting at vertex 0 (A) --> tk must convert between letters 0123 and ABCD for vertices
+         * create an empty list of permanent vertices (done)
+         * create a list of non-permanent vertices (done)
+         * starting at vertex 0 (A) --> tk must convert between letters 0123 and ABCD for vertices (using an alphabet array) (done)
          * 
          * current vertex = starting vertex
-         * while the list of non-permanent vertices is not empty / permanent vertices list is empty:
+         * 
+         * while the list of non-permanent vertices is not empty
          *     for every vertex in the network
          *         if it is connected to the current vertex
          *            set the temporary distance label of the vertex to the distance between it and the current vertex
@@ -93,57 +94,70 @@ class Algorithms
             NonPermanentVerticesList.Add(new Vertex(i, i,int.MaxValue, int.MaxValue));
         }
         
-        /* to start at any vertex
-         * Console.WriteLine("Which vertex do you want to start at? 0 to {numberOfNodes - 1}:\n");
-           int startVertex = Program.GetValidInt(0, numberOfNodes - 1);
-         */
+        // alphabet array to convert between vertex numbers and letters
+        char[] alphabetArray = new char[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
         
-        Console.WriteLine("Starting at vertex 0\nThis is vertex A in the adjacency matrix");
+        Console.WriteLine($"Starting at vertex {alphabetArray[0]}");
         int startVertex = 0;
-        
-        NonPermanentVerticesList[startVertex].StopNumber = 0;
-        NonPermanentVerticesList[startVertex].PermanentDistanceLabel = 0;
-        NonPermanentVerticesList[startVertex].TemporaryDistanceLabel = 0;
-        NonPermanentVerticesList[startVertex].PermanentlyAdded = true;
 
+        int currentVertex = startVertex;
         
-        for (int i = 0; i <= NonPermanentVerticesList.Count - 1; i++)
-            // for some reason the condition cannot be NonPermanentVerticesList.Count + 1
+        // make the start vertex permanent
+        NonPermanentVerticesList[currentVertex].StopNumber = 0;
+        NonPermanentVerticesList[currentVertex].PermanentDistanceLabel = 0;
+        NonPermanentVerticesList[currentVertex].TemporaryDistanceLabel = 0;
+        NonPermanentVerticesList[currentVertex].PermanentlyAdded = true;
+
+        while (PermanentVerticesList.Count != numberOfNodes)
         {
-            if (i == startVertex)
+            // for every vertex in the graph, check if it is connected to the start vertex.
+            // If it is, set the temporary distance label to the distance between the two vertices
+            for (int i = 1; i <= NonPermanentVerticesList.Count - 1; i++)
+                // for some reason the condition cannot be NonPermanentVerticesList.Count + 1
             {
-                Console.WriteLine($"Vertex {i} is the start vertex");
+                if (i == currentVertex)
+                {
+                    Console.WriteLine($"Vertex {alphabetArray[i]} is the current vertex");
+                }
+                else if (adjacencyMatrix[currentVertex, i] != 0)
+                {
+                    // include a route going through another place and sum the distances
+                    NonPermanentVerticesList[i].TemporaryDistanceLabel = adjacencyMatrix[currentVertex, i];
+                    Console.WriteLine($"Vertex {alphabetArray[i]} is connected to vertex {alphabetArray[currentVertex]} with a distance of {adjacencyMatrix[currentVertex, i]}");
+                }
+                else
+                {
+                    Console.WriteLine($"Vertex {alphabetArray[i]} is not connected to vertex {alphabetArray[currentVertex]}");
+                }
             }
-            else if (adjacencyMatrix[startVertex, i] != 0)
+    
+            // find the vertex with the smallest temporary distance label
+            int smallestValue = int.MaxValue;
+            int smallestVertex = 0;
+    
+            foreach (Vertex vertex in NonPermanentVerticesList)
             {
-                NonPermanentVerticesList[i].TemporaryDistanceLabel = adjacencyMatrix[startVertex, i];
-                Console.WriteLine($"Vertex {i} is connected to vertex {startVertex} with a distance of {adjacencyMatrix[startVertex, i]}");
+                if (vertex.PermanentlyAdded == false && vertex.TemporaryDistanceLabel < smallestValue)
+                {
+                    smallestValue = vertex.TemporaryDistanceLabel;
+                    smallestVertex = vertex.VertexNumber;
+                }
             }
-            else
-            {
-                Console.WriteLine($"Vertex {i} is not connected to vertex {startVertex}");
-            }
+    
+            // make it permanent and store it in the permanent vertices list
+            NonPermanentVerticesList[smallestVertex].PermanentDistanceLabel = NonPermanentVerticesList[smallestVertex].TemporaryDistanceLabel;
+            NonPermanentVerticesList[smallestVertex].PermanentlyAdded = true;
+            PermanentVerticesList.Add(NonPermanentVerticesList[smallestVertex]);
+
+            currentVertex++;
         }
-    
-        // find the vertex with the smallest temporary distance label, and make it permanent
-    
-        int smallestValue = int.MaxValue;
-        int smallestVertex = 0;
-    
-        foreach (Vertex vertex in NonPermanentVerticesList)
-        {
-            if (vertex.PermanentlyAdded == false && vertex.TemporaryDistanceLabel < smallestValue)
-            {
-                smallestValue = vertex.TemporaryDistanceLabel;
-                smallestVertex = vertex.VertexNumber;
-            }
-        }
-    
-        NonPermanentVerticesList[smallestVertex].PermanentDistanceLabel = NonPermanentVerticesList[smallestVertex].TemporaryDistanceLabel;
-        NonPermanentVerticesList[smallestVertex].PermanentlyAdded = true;
-        PermanentVerticesList.Add(NonPermanentVerticesList[smallestVertex]);
-        NonPermanentVerticesList.RemoveAt(smallestVertex);
         
+        // print the current permanent vertices list
+        Console.WriteLine("Permanent vertices list:");
+        foreach (Vertex vertex in PermanentVerticesList)
+        {
+            Console.WriteLine($"Vertex {alphabetArray[vertex.VertexNumber]} has a permanent distance label of {vertex.PermanentDistanceLabel}");
+        }
         
         stopwatch.Stop();
         Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
@@ -215,7 +229,7 @@ class Matrix
                 }
                 else if (i < j) // above the diagonal
                 {
-                    adjacencyMatrix[i, j] = random.Next(0, 5);
+                    adjacencyMatrix[i, j] = random.Next(0, 9);
                 }
                 else // below the diagonal is the mirror of the above
                 {
