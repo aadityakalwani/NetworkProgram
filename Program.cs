@@ -84,11 +84,12 @@ class Algorithms
 
     Stopwatch stopwatch = new Stopwatch();
     stopwatch.Start();
+    
+    Thread.Sleep(69);
 
     // alphabet array to convert between vertex numbers and letters
-    char[] alphabetArray = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    char[] alphabetArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     
-    // Create lists to track permanent and non-permanent vertices
     List<Vertex> PermanentVerticesList = new List<Vertex>();
     List<Vertex> NonPermanentVerticesList = new List<Vertex>();
     for (int i = 0; i < numberOfNodes; i++)
@@ -96,14 +97,14 @@ class Algorithms
         NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
     }
 
-    // Initialize starting vertex (vertex 0)
+    // initialize starting vertex (vertex 0/A)
     NonPermanentVerticesList[0].TemporaryDistanceLabel = 0;
 
     while (PermanentVerticesList.Count < numberOfNodes)
     {
-        // Find the vertex with the smallest temporary distance label
+        // find the vertex with the smallest temporary distance label
         int smallestValue = int.MaxValue;
-        int smallestVertex = -1; // Initialize with an invalid index
+        int smallestVertex = -1; // initialize with an invalid index to just let shit work later
         foreach (Vertex vertex in NonPermanentVerticesList)
         {
             if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
@@ -125,7 +126,7 @@ class Algorithms
         currentVertex.PermanentlyAdded = true;
         PermanentVerticesList.Add(currentVertex);
 
-        // Relax edges connected to the current vertex
+        // updating distances if a shorter path is found
         for (int i = 0; i < numberOfNodes; i++)
         {
             if (adjacencyMatrix[currentVertex.VertexNumber, i] != 0)
