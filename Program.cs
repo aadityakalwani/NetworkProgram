@@ -80,77 +80,90 @@ class Algorithms
          *     [repeat]
          */
         
-    Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
+        Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
 
-    Stopwatch stopwatch = new Stopwatch();
-    stopwatch.Start();
-    
-    Thread.Sleep(69);
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        
+        Thread.Sleep(69);
 
-    // alphabet array to convert between vertex numbers and letters
-    char[] alphabetArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-    
-    List<Vertex> PermanentVerticesList = new List<Vertex>();
-    List<Vertex> NonPermanentVerticesList = new List<Vertex>();
-    for (int i = 0; i < numberOfNodes; i++)
-    {
-        NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
-    }
-
-    // initialize starting vertex (vertex 0/A)
-    NonPermanentVerticesList[0].TemporaryDistanceLabel = 0;
-
-    while (PermanentVerticesList.Count < numberOfNodes)
-    {
-        // find the vertex with the smallest temporary distance label
-        int smallestValue = int.MaxValue;
-        int smallestVertex = -1; // initialize with an invalid index to just let shit work later
-        foreach (Vertex vertex in NonPermanentVerticesList)
-        {
-            if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
-            {
-                smallestValue = vertex.TemporaryDistanceLabel;
-                smallestVertex = vertex.VertexNumber;
-            }
-        }
-
-        if (smallestVertex == -1)
-        {
-            // Graph is disconnected or all vertices are permanently added
-            Console.WriteLine("Graph is disconnected or all vertices are permanently added");
-            break;
-        }
-
-        // Make the smallest vertex permanent
-        Vertex currentVertex = NonPermanentVerticesList[smallestVertex];
-        currentVertex.PermanentlyAdded = true;
-        PermanentVerticesList.Add(currentVertex);
-
-        // updating distances if a shorter path is found
+        // alphabet array to convert between vertex numbers and letters
+        char[] alphabetArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        
+        List<Vertex> PermanentVerticesList = new List<Vertex>();
+        List<Vertex> NonPermanentVerticesList = new List<Vertex>();
         for (int i = 0; i < numberOfNodes; i++)
         {
-            if (adjacencyMatrix[currentVertex.VertexNumber, i] != 0)
+            NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
+        }
+
+        // initialize starting vertex (vertex 0/A)
+        NonPermanentVerticesList[0].TemporaryDistanceLabel = 0;
+
+        while (PermanentVerticesList.Count < numberOfNodes)
+        {
+            // find the vertex with the smallest temporary distance label
+            int smallestValue = int.MaxValue;
+            int smallestVertex = -1; // initialize with an invalid index to just let shit work later
+            foreach (Vertex vertex in NonPermanentVerticesList)
             {
-                int newDistance = currentVertex.TemporaryDistanceLabel + adjacencyMatrix[currentVertex.VertexNumber, i];
-                if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
+                if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
                 {
-                    NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
+                    smallestValue = vertex.TemporaryDistanceLabel;
+                    smallestVertex = vertex.VertexNumber;
+                }
+            }
+
+            if (smallestVertex == -1)
+            {
+                // Graph is disconnected or all vertices are permanently added
+                Console.WriteLine("Graph is disconnected or all vertices are permanently added");
+                break;
+            }
+
+            // Make the smallest vertex permanent
+            Vertex currentVertex = NonPermanentVerticesList[smallestVertex];
+            currentVertex.PermanentlyAdded = true;
+            PermanentVerticesList.Add(currentVertex);
+
+            // updating distances if a shorter path is found
+            for (int i = 0; i < numberOfNodes; i++)
+            {
+                if (adjacencyMatrix[currentVertex.VertexNumber, i] != 0)
+                {
+                    int newDistance = currentVertex.TemporaryDistanceLabel + adjacencyMatrix[currentVertex.VertexNumber, i];
+                    if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
+                    {
+                        NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
+                        NonPermanentVerticesList[i].Predecessor = currentVertex.VertexNumber; // adding in predecessor to backtrack and store route
+                    }
                 }
             }
         }
+        
+        stopwatch.Stop();
+        Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
+        
+        
+        for (int i = 1; i < numberOfNodes; i++)
+        {
+            List<int> path = new List<int>();
+            int currentVertexIndex = i;
+            while (currentVertexIndex != 0) // Trace back until reaching the start vertex
+            {
+                path.Add(currentVertexIndex);
+                currentVertexIndex = NonPermanentVerticesList[currentVertexIndex].Predecessor;
+            }
+            path.Add(0); // Add start vertex
+            path.Reverse(); // Reverse to get the path from start to current vertex
+            Console.Write($"Shortest path from A to {alphabetArray[i]}:");
+            foreach (int vertexIndex in path)
+            {
+                Console.Write($" -> {alphabetArray[vertexIndex]}");
+            }
+            Console.WriteLine();
+        }
     }
-
-    // print the final result
-    Console.WriteLine("Permanent vertices list:");
-    foreach (Vertex vertex in PermanentVerticesList)
-    {
-        Console.WriteLine($"Vertex {alphabetArray[vertex.VertexNumber]} has a permanent distance label of {vertex.TemporaryDistanceLabel}");
-    }
-
-    stopwatch.Stop();
-    Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
-    }
-
     
     public static void ApplyPrims(int[,] adjacencyMatrix)
     {
@@ -189,12 +202,14 @@ class Vertex
     public int PermanentDistanceLabel;
     public int TemporaryDistanceLabel;
     public bool PermanentlyAdded;
+    public int Predecessor;
     
     public Vertex(int stopNumber, int vertexNumber,  int temporaryDistanceLabel)
     {
         VertexNumber = vertexNumber;
         StopNumber = stopNumber;
         PermanentDistanceLabel = 999;
+        Predecessor = -1;
         TemporaryDistanceLabel = temporaryDistanceLabel;
         PermanentlyAdded = false;
     }
