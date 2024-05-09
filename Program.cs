@@ -13,8 +13,11 @@ internal abstract class Program
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
         Matrix.AssignRandomDistances(adjacencyMatrix, numberOfNodes);
         
-        Console.WriteLine("After assigning these distances, here is the current adjacency matrix:\n");
-        Matrix.DisplayMatrix(adjacencyMatrix);
+        Console.WriteLine("We have created your adjacency matrix. Enter \"y\" to see it:\n");
+        if (Console.ReadLine().ToLower() == "y")
+        {
+            Matrix.DisplayMatrix(adjacencyMatrix);
+        }
         
         int userMenuChoice = Menu();
         switch (userMenuChoice)
@@ -276,22 +279,13 @@ static class Matrix
         
         string returnValue = "";
         
-        // a way to get the alphabet value in terms of "A1, B1, C2, etc. and then go Z1, A2, B2, C2 ... Z2, A3, etc"
-        // loop through so long as the desired index is more than i * 26
-        // then index % 26 to get the correct letter
-        // add the letter to the return value
-        // add i to the return value
-
-        
         // find the position of the letter in the alphabet
         int remainder = index % 26;
         
         // find the number of times the index is greater than 26
         int quotient = index / 26;
         
-        returnValue += alphabet[remainder];
-        returnValue += quotient + 1;
-        
+        returnValue = returnValue + alphabet[remainder] + (quotient + 1);
 
         return returnValue;
     }
