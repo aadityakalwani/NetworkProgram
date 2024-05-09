@@ -2,12 +2,12 @@
 
 namespace NetworkProgram;
 
-class Program
+internal abstract class Program
 {
     public static void Main()
     {
         Console.WriteLine("How many nodes exist in the graph?\nPlease use a number 2 - 60 otherwise idk what to call the vertices:");
-        int numberOfNodes = GetValidInt(2, 60);
+        int numberOfNodes = GetValidInt(2, 9999);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
@@ -32,7 +32,7 @@ class Program
         
     }
 
-    public static int Menu()
+    private static int Menu()
     {
         
         Console.WriteLine("\nChoose an algorithm to apply:\n1 - Dijkstra's\n2 - Prim's\n3 - Kruskal's\nEnter a number:");
@@ -40,7 +40,7 @@ class Program
         return GetValidInt(1, 3);
     }
     
-    public static int GetValidInt(int min, int max)
+    private static int GetValidInt(int min, int max)
     {
         if (int.TryParse(Console.ReadLine(), out int validInt))
         {
@@ -57,7 +57,7 @@ class Program
 }
 
 // SP and MST related methods
-class Algorithms
+static class Algorithms
 {
     public static void ApplyDijkstra(int[,] adjacencyMatrix, int numberOfNodes)
     {
@@ -66,7 +66,7 @@ class Algorithms
          *
          * create an empty list of permanent vertices
          * create a list of non-permanent vertices
-         * starting at vertex 0 (A) --> tk must convert between letters 0123 and ABCD for vertices (using an alphabet array)
+         * starting at vertex 0 (A)
          *
          * current vertex = starting vertex
          *
@@ -87,20 +87,7 @@ class Algorithms
         
         Thread.Sleep(69);
 
-        // alphabet array to convert between vertex numbers and letters
-        char[] alphabetArray =
-            [
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-            'U', 'V', 'W', 'X', 'Y', 'Z',
-            'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ',
-            'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ',
-            'φ', 'χ', 'ψ', 'ω',
-            'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ',
-            'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ',
-            'ⓤ', 'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ',
-            '㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'
-            ];
+        
         
         List<Vertex> PermanentVerticesList = new List<Vertex>();
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
@@ -165,12 +152,12 @@ class Algorithms
             path.Add(0); // Add start vertex
 
             // Print the shortest path
-            Console.Write($"Shortest path from A to {alphabetArray[i]}:");
+            Console.Write($"Shortest path from A to {Matrix.GetAlphabet(i)}:");
 
             int totalLength = 0;
             for (int j = path.Count - 1; j >= 0; j--)
             {
-                Console.Write($" -> {alphabetArray[path[j]]} ({NonPermanentVerticesList[path[j]].TemporaryDistanceLabel})");
+                Console.Write($" -> {Matrix.GetAlphabet(path[j])} ({NonPermanentVerticesList[path[j]].TemporaryDistanceLabel})");
                 totalLength += NonPermanentVerticesList[path[j]].TemporaryDistanceLabel;
 
             }
@@ -182,6 +169,7 @@ class Algorithms
         
         stopwatch.Stop();
         Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
+        Console.WriteLine("This includes a 69 millisecond sleep for dramatic effect.");
         
     }
     
@@ -236,7 +224,7 @@ class Vertex
 }
 
 // Matrix-related methods
-class Matrix
+static class Matrix
 {
     public static void AssignRandomDistances(int[,] adjacencyMatrix, int numberOfNodes)
     {
@@ -264,34 +252,47 @@ class Matrix
     
     public static void DisplayMatrix(int[,] matrix)
     {
-        char[] alphabetArray =
-        [
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-            'U', 'V', 'W', 'X', 'Y', 'Z',
-            'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ',
-            'λ', 'μ', 'ν', 'ξ', 'ο', 'π', 'ρ', 'σ', 'τ', 'υ',
-            'φ', 'χ', 'ψ', 'ω',
-            'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ',
-            'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ',
-            'ⓤ', 'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ',
-            '㉠', '㉡', '㉢', '㉣', '㉤', '㉥', '㉦', '㉧', '㉨', '㉩'
-        ];
         Console.Write("  ");
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            Console.Write(" " + alphabetArray[i] + "");
+            Console.Write(" " + GetAlphabet(i) + "");
         }
         Console.WriteLine();
 
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            Console.Write(alphabetArray[i] + "| ");
+            Console.Write(GetAlphabet(i) + "| ");
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
                 Console.Write(matrix[i, j] + " ");
             }
             Console.WriteLine();
         }
+    }
+    
+    public static string GetAlphabet(int index)
+    {
+        string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        string returnValue = "";
+        
+        // a way to get the alphabet value in terms of "A1, B1, C2, etc. and then go Z1, A2, B2, C2 ... Z2, A3, etc"
+        // loop through so long as the desired index is more than i * 26
+        // then index % 26 to get the correct letter
+        // add the letter to the return value
+        // add i to the return value
+
+        
+        // find the position of the letter in the alphabet
+        int remainder = index % 26;
+        
+        // find the number of times the index is greater than 26
+        int quotient = index / 26;
+        
+        returnValue += alphabet[remainder];
+        returnValue += quotient + 1;
+        
+
+        return returnValue;
     }
 }
