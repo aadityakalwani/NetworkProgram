@@ -2,12 +2,19 @@
 
 namespace NetworkProgram;
 
+/*
+ * current issues:
+ * - the program is not able to handle disconnected graphs
+ * - the program is not able to handle graphs with negative weights
+ * 
+ */
+
 internal abstract class Program
 {
     public static void Main()
     {
-        Console.WriteLine("How many nodes exist in the graph?\nPlease use a number 2 - 60 otherwise idk what to call the vertices:");
-        int numberOfNodes = GetValidInt(2, 9999);
+        Console.WriteLine("Enter the number of nodes exist in the graph:\n");
+        int numberOfNodes = GetValidInt(2, 65000);
         int[,] adjacencyMatrix = new int[numberOfNodes, numberOfNodes];
         
         Console.WriteLine("Because this is a simple program, i'll randomly assign the distances of the edges between the nodes");
@@ -89,8 +96,6 @@ static class Algorithms
         stopwatch.Start();
         
         Thread.Sleep(69);
-
-        
         
         List<Vertex> PermanentVerticesList = new List<Vertex>();
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
@@ -98,17 +103,23 @@ static class Algorithms
         {
             NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
         }
-
-        // initialize starting vertex (vertex 0/A)
-        NonPermanentVerticesList[0].TemporaryDistanceLabel = 0;
+        
+        // initialize starting vertex
+        Console.WriteLine("Enter the vertex you want to start at (eg. A3, B9...):\n");
+        string userVertex = Console.ReadLine().ToUpper();
+        int startVertex = Matrix.GetIndex(userVertex);
+        Console.WriteLine($"You have chosen to start at a vertex of index position {startVertex}");
+        
+        NonPermanentVerticesList[startVertex].TemporaryDistanceLabel = 0;
 
         while (PermanentVerticesList.Count < numberOfNodes)
         {
             // find the vertex with the smallest temporary distance label
             int smallestValue = int.MaxValue;
             int smallestVertex = -1; // initialize with an invalid index to just let shit work later
-            foreach (Vertex vertex in NonPermanentVerticesList)
+            for (int i = 0; i < NonPermanentVerticesList.Count; i++)
             {
+                Vertex vertex = NonPermanentVerticesList[i];
                 if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
                 {
                     smallestValue = vertex.TemporaryDistanceLabel;
@@ -155,7 +166,7 @@ static class Algorithms
             path.Add(0); // Add start vertex
 
             // Print the shortest path
-            Console.Write($"Shortest path from A to {Matrix.GetAlphabet(i)}:");
+            Console.Write($"Shortest path from {userVertex} to {Matrix.GetAlphabet(i)}:");
 
             int totalLength = 0;
             for (int j = path.Count - 1; j >= 0; j--)
@@ -165,10 +176,8 @@ static class Algorithms
 
             }
             Console.Write($"    | Total length of {totalLength}");
-
             Console.WriteLine();
         }
-
         
         stopwatch.Stop();
         Console.WriteLine($"Applying Dijkstra's took {stopwatch.ElapsedMilliseconds}ms for this matrix of {numberOfNodes} nodes.");
@@ -288,5 +297,19 @@ static class Matrix
         returnValue = returnValue + alphabet[remainder] + (quotient + 1);
 
         return returnValue;
+    }
+
+    public static int GetIndex(string userVertex)
+    {
+        string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        string letterString = userVertex[0].ToString();
+        string numberString = userVertex[1].ToString();
+        
+        int letter = alphabet.IndexOf(letterString);
+        int number = int.Parse(numberString) - 1;
+        
+        int index = number * 26 + letter;
+        return index;
     }
 }
