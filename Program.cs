@@ -151,30 +151,47 @@ static class Algorithms
             PermanentVerticesList.Add(smallestVertex);
 
             // updating the temporary distance labels of the non-permanent vertices to see if a shorter route/arc has now been found
-            for (int i = 0; i < numberOfNodes; i++)
+            /*
+             * wait instead of the below i can use a foreach loop
+             for (int i = 0; i < numberOfNodes; i++)
+               {
+                   if (adjacencyMatrix[smallestVertex.VertexNumber, i] != 0)
+                   {
+                       int newDistance = smallestVertex.TemporaryDistanceLabel + adjacencyMatrix[smallestVertex.VertexNumber, i];
+                       if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
+                       {
+                           NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
+                           NonPermanentVerticesList[i].Predecessor = smallestVertex.VertexNumber; // adding in predecessor to backtrack and store route
+                       }
+                   }
+               }
+             */
+
+            foreach (Vertex vertex in NonPermanentVerticesList)
             {
-                if (adjacencyMatrix[smallestVertex.VertexNumber, i] != 0)
+                if (adjacencyMatrix[smallestVertex.VertexNumber, vertex.VertexNumber] != 0)
                 {
-                    int newDistance = smallestVertex.TemporaryDistanceLabel + adjacencyMatrix[smallestVertex.VertexNumber, i];
-                    if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
+                    int newDistance = smallestVertex.TemporaryDistanceLabel + adjacencyMatrix[smallestVertex.VertexNumber, vertex.VertexNumber];
+                    if (newDistance < vertex.TemporaryDistanceLabel)
                     {
-                        NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
-                        NonPermanentVerticesList[i].Predecessor = smallestVertex.VertexNumber; // adding in predecessor to backtrack and store route
+                        vertex.TemporaryDistanceLabel = newDistance;
+                        vertex.Predecessor = smallestVertex.VertexNumber;
                     }
                 }
             }
         }
+        // after this while loop, all vertices have been made permanent
         
-        for (int i = 1; i < numberOfNodes; i++)
+        for (int i = 1; i < numberOfNodes; i++) // for every vertex in the network
         {
-            List<int> path = new List<int>();
+            List<int> path = new(); // the path list stores the vertexNumber of the vertices in the shortest path
             int currentVertexIndex = i;
-            while (currentVertexIndex != 0) // Trace back until reaching the start vertex
+            while (currentVertexIndex != 0) // trace back until reaching the start vertex
             {
                 path.Add(currentVertexIndex);
-                currentVertexIndex = NonPermanentVerticesList[currentVertexIndex].Predecessor;
+                currentVertexIndex = PermanentVerticesList[currentVertexIndex].Predecessor;
             }
-            path.Add(0); // Add start vertex
+            path.Add(0); // add start vertex
 
             // Print the shortest path
             Console.Write($"Shortest path from {userVertex} to {Matrix.GetAlphabet(i)}:");
@@ -182,8 +199,8 @@ static class Algorithms
             int totalLength = 0;
             for (int j = path.Count - 1; j >= 0; j--)
             {
-                Console.Write($" -> {Matrix.GetAlphabet(path[j])} ({NonPermanentVerticesList[path[j]].TemporaryDistanceLabel})");
-                totalLength += NonPermanentVerticesList[path[j]].TemporaryDistanceLabel;
+                Console.Write($" -> {Matrix.GetAlphabet(path[j])} ({PermanentVerticesList[path[j]].TemporaryDistanceLabel})");
+                totalLength += PermanentVerticesList[path[j]].TemporaryDistanceLabel;
 
             }
             Console.Write($"    | Total length of {totalLength}");
