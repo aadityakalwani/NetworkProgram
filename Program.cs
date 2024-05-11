@@ -102,7 +102,7 @@ static class Algorithms
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
         for (int i = 0; i < numberOfNodes; i++)
         {
-            NonPermanentVerticesList.Add(new Vertex(i, i, int.MaxValue));
+            NonPermanentVerticesList.Add(new Vertex(i, i));
         }
         
         // initialize starting vertex
@@ -132,7 +132,7 @@ static class Algorithms
                }
              */
 
-            Vertex smallestVertex = null; // i don't like this being null but perhaps this is what we must do
+            Vertex smallestVertex = null; // I don't like this being null but perhaps this is what we must do
             int smallestValue = int.MaxValue;
             
             
@@ -149,24 +149,9 @@ static class Algorithms
             // make the smallest vertex permanent by removing it from the non-permanent list and adding it to the permanent list
             NonPermanentVerticesList.Remove(smallestVertex);
             PermanentVerticesList.Add(smallestVertex);
+            smallestVertex.PermanentDistanceLabel = smallestVertex.TemporaryDistanceLabel;
 
             // updating the temporary distance labels of the non-permanent vertices to see if a shorter route/arc has now been found
-            /*
-             * wait instead of the below i can use a foreach loop
-             for (int i = 0; i < numberOfNodes; i++)
-               {
-                   if (adjacencyMatrix[smallestVertex.VertexNumber, i] != 0)
-                   {
-                       int newDistance = smallestVertex.TemporaryDistanceLabel + adjacencyMatrix[smallestVertex.VertexNumber, i];
-                       if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
-                       {
-                           NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
-                           NonPermanentVerticesList[i].Predecessor = smallestVertex.VertexNumber; // adding in predecessor to backtrack and store route
-                       }
-                   }
-               }
-             */
-
             foreach (Vertex vertex in NonPermanentVerticesList)
             {
                 if (adjacencyMatrix[smallestVertex.VertexNumber, vertex.VertexNumber] != 0)
@@ -199,7 +184,7 @@ static class Algorithms
             int totalLength = 0;
             for (int j = path.Count - 1; j >= 0; j--)
             {
-                Console.Write($" -> {Matrix.GetAlphabet(path[j])} ({PermanentVerticesList[path[j]].TemporaryDistanceLabel})");
+                Console.Write($" -> {Matrix.GetAlphabet(path[j])} ({PermanentVerticesList[path[j]].PermanentDistanceLabel})");
                 totalLength += PermanentVerticesList[path[j]].TemporaryDistanceLabel;
 
             }
@@ -251,13 +236,13 @@ class Vertex
     public int TemporaryDistanceLabel;
     public int Predecessor;
     
-    public Vertex(int stopNumber, int vertexNumber,  int temporaryDistanceLabel)
+    public Vertex(int stopNumber, int vertexNumber)
     {
         VertexNumber = vertexNumber;
         StopNumber = stopNumber;
-        PermanentDistanceLabel = 999;
+        PermanentDistanceLabel = int.MaxValue;
         Predecessor = -1;
-        TemporaryDistanceLabel = temporaryDistanceLabel;
+        TemporaryDistanceLabel = int.MaxValue;
     }
 }
 
