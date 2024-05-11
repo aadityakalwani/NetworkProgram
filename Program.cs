@@ -97,6 +97,7 @@ static class Algorithms
         
         Thread.Sleep(69);
         
+        // initialize lists
         List<Vertex> PermanentVerticesList = new List<Vertex>();
         List<Vertex> NonPermanentVerticesList = new List<Vertex>();
         for (int i = 0; i < numberOfNodes; i++)
@@ -115,9 +116,9 @@ static class Algorithms
         while (PermanentVerticesList.Count < numberOfNodes)
         {
             // find the vertex with the smallest temporary distance label
-            int smallestValue = int.MaxValue;
+            int smallestValue = int.MaxValue; // set this as a huge number to start with
             int smallestVertex = -1; // initialize with an invalid index to just let shit work later
-            for (int i = 0; i < NonPermanentVerticesList.Count; i++)
+            for (int i = 0; i < NonPermanentVerticesList.Count; i++) // for every item in the nonPermanentVerticesLife
             {
                 Vertex vertex = NonPermanentVerticesList[i];
                 if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
@@ -129,7 +130,6 @@ static class Algorithms
 
             if (smallestVertex == -1)
             {
-                // Graph is disconnected or all vertices are permanently added
                 Console.WriteLine("Graph is disconnected or all vertices are permanently added");
                 break;
             }
