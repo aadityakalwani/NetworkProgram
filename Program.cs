@@ -90,7 +90,11 @@ static class Algorithms
          *     [repeat]
          */
         
-        Console.WriteLine("\nWe are applying Dijkstra's from a matrix; let us cook");
+        // initialize starting vertex
+        Console.WriteLine("Enter the vertex you want to start at (eg. A3, B9...):\n");
+        string userVertex = Console.ReadLine().ToUpper();
+        int startVertex = Matrix.GetIndex(userVertex);
+        Console.WriteLine($"You have chosen to start at a vertex of index position {startVertex}");
 
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
@@ -104,12 +108,6 @@ static class Algorithms
         {
             NonPermanentVerticesList.Add(new Vertex(i, i));
         }
-        
-        // initialize starting vertex
-        Console.WriteLine("Enter the vertex you want to start at (eg. A3, B9...):\n");
-        string userVertex = Console.ReadLine().ToUpper();
-        int startVertex = Matrix.GetIndex(userVertex);
-        Console.WriteLine($"You have chosen to start at a vertex of index position {startVertex}");
         
         NonPermanentVerticesList[startVertex].TemporaryDistanceLabel = 0;
 
