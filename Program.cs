@@ -116,39 +116,50 @@ static class Algorithms
         while (PermanentVerticesList.Count < numberOfNodes)
         {
             // find the vertex with the smallest temporary distance label
-            int smallestValue = int.MaxValue; // set this as a huge number to start with
-            int smallestVertex = -1; // initialize with an invalid index to just let shit work later
-            for (int i = 0; i < NonPermanentVerticesList.Count; i++) // for every item in the nonPermanentVerticesLife
+            
+            /*
+             int smallestValue = int.MaxValue; // set this as a huge number to start with
+             int smallestVertex = -1; // initialize with an invalid index to just let shit work later
+               
+             * for (int i = 0; i < NonPermanentVerticesList.Count; i++) // for every item in the nonPermanentVerticesLife
+               {
+                   Vertex vertex = NonPermanentVerticesList[i];
+                   if (vertex.TemporaryDistanceLabel < smallestValue)
+                   {
+                       smallestValue = vertex.TemporaryDistanceLabel;
+                       smallestVertex = vertex.VertexNumber;
+                   }
+               }
+             */
+
+            Vertex smallestVertex = null; // i don't like this being null but perhaps this is what we must do
+            int smallestValue = int.MaxValue;
+            
+            
+            foreach (Vertex vertex in NonPermanentVerticesList)
             {
-                Vertex vertex = NonPermanentVerticesList[i];
-                if (!vertex.PermanentlyAdded && vertex.TemporaryDistanceLabel < smallestValue)
+                if (vertex.TemporaryDistanceLabel < smallestValue)
                 {
                     smallestValue = vertex.TemporaryDistanceLabel;
-                    smallestVertex = vertex.VertexNumber;
+                    smallestVertex = vertex;
                 }
             }
+            // smallestVertex is now the vertex with the smallest temporary distance label
+            
+            // make the smallest vertex permanent by removing it from the non-permanent list and adding it to the permanent list
+            NonPermanentVerticesList.Remove(smallestVertex);
+            PermanentVerticesList.Add(smallestVertex);
 
-            if (smallestVertex == -1)
-            {
-                Console.WriteLine("Graph is disconnected or all vertices are permanently added");
-                break;
-            }
-
-            // Make the smallest vertex permanent
-            Vertex currentVertex = NonPermanentVerticesList[smallestVertex];
-            currentVertex.PermanentlyAdded = true;
-            PermanentVerticesList.Add(currentVertex);
-
-            // updating distances if a shorter path is found
+            // updating the temporary distance labels of the non-permanent vertices to see if a shorter route/arc has now been found
             for (int i = 0; i < numberOfNodes; i++)
             {
-                if (adjacencyMatrix[currentVertex.VertexNumber, i] != 0)
+                if (adjacencyMatrix[smallestVertex.VertexNumber, i] != 0)
                 {
-                    int newDistance = currentVertex.TemporaryDistanceLabel + adjacencyMatrix[currentVertex.VertexNumber, i];
+                    int newDistance = smallestVertex.TemporaryDistanceLabel + adjacencyMatrix[smallestVertex.VertexNumber, i];
                     if (newDistance < NonPermanentVerticesList[i].TemporaryDistanceLabel)
                     {
                         NonPermanentVerticesList[i].TemporaryDistanceLabel = newDistance;
-                        NonPermanentVerticesList[i].Predecessor = currentVertex.VertexNumber; // adding in predecessor to backtrack and store route
+                        NonPermanentVerticesList[i].Predecessor = smallestVertex.VertexNumber; // adding in predecessor to backtrack and store route
                     }
                 }
             }
@@ -221,7 +232,6 @@ class Vertex
     public int StopNumber;
     public int PermanentDistanceLabel;
     public int TemporaryDistanceLabel;
-    public bool PermanentlyAdded;
     public int Predecessor;
     
     public Vertex(int stopNumber, int vertexNumber,  int temporaryDistanceLabel)
@@ -231,7 +241,6 @@ class Vertex
         PermanentDistanceLabel = 999;
         Predecessor = -1;
         TemporaryDistanceLabel = temporaryDistanceLabel;
-        PermanentlyAdded = false;
     }
 }
 
